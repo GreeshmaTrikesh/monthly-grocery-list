@@ -1,51 +1,45 @@
+
 let lists = JSON.parse(localStorage.getItem('familyLists')) || [];
 let history = JSON.parse(localStorage.getItem('historyLists')) || [];
 
-let currentListIndex = null;
+let currentListIndex = 0;
 let selectedUnit = 'kg';
 let qty = 1;
-let completedCollapsed = false;
-
-function vibrate(){
-if(navigator.vibrate){
-navigator.vibrate(20);
-}
-}
 
 function save(){
 localStorage.setItem('familyLists',JSON.stringify(lists));
 localStorage.setItem('historyLists',JSON.stringify(history));
 }
 
-function setActiveRail(el){
-document.querySelectorAll('.rail-icon').forEach(i=>i.classList.remove('active'));
+function setActive(el){
+document.querySelectorAll('.side-item').forEach(i=>i.classList.remove('active'));
 el.classList.add('active');
 }
 
-function showPage(pageId,el){
+function showPage(page,el){
 
 document.getElementById('homePage').style.display='none';
 document.getElementById('detailsPage').style.display='none';
 document.getElementById('historyPage').style.display='none';
 
-document.getElementById(pageId).style.display='block';
+document.getElementById(page).style.display='block';
 
-if(el){
-setActiveRail(el);
+if(el) setActive(el);
+
+if(page==='historyPage') renderHistory();
 }
 
-if(pageId==='historyPage'){
-renderHistory();
+document.getElementById('monthSelect').addEventListener('change',e=>{
+if(e.target.value !== 'Custom'){
+document.getElementById('listName').value=e.target.value;
 }
-}
+});
 
 function createList(){
 
-const name=document.getElementById('listName').value.trim();
+let name=document.getElementById('listName').value.trim();
 
 if(!name) return;
-
-vibrate();
 
 lists.push({
 name:name,
@@ -70,8 +64,10 @@ const div=document.createElement('div');
 div.className='list-card';
 
 div.innerHTML=`
-<button class="delete-list-btn"
-onclick="event.stopPropagation();deleteList(${index})">✕</button>
+<button class="delete-btn"
+onclick="event.stopPropagation();deleteList(${index})">
+✕
+</button>
 
 <div>${list.name}</div>
 `;
@@ -79,12 +75,10 @@ onclick="event.stopPropagation();deleteList(${index})">✕</button>
 div.onclick=()=>openList(index);
 
 container.appendChild(div);
-
 });
 }
 
 function deleteList(index){
-vibrate();
 lists.splice(index,1);
 save();
 renderLists();
@@ -94,23 +88,11 @@ function openList(index){
 
 currentListIndex=index;
 
-document.getElementById('homePage').style.display='none';
-document.getElementById('historyPage').style.display='none';
-document.getElementById('detailsPage').style.display='block';
+document.getElementById('currentListNameHeader').innerText=lists[index].name;
 
-document.getElementById('currentListName').value=lists[index].name;
+showPage('detailsPage');
 
 renderItems();
-}
-
-function backHome(){
-showPage('homePage');
-}
-
-function updateListName(){
-lists[currentListIndex].name=document.getElementById('currentListName').value;
-save();
-renderLists();
 }
 
 function selectUnit(el,unit){
@@ -126,8 +108,6 @@ el.classList.add('active');
 
 function changeQty(change){
 
-vibrate();
-
 qty=Math.max(1,qty+change);
 
 document.getElementById('qtyValue').innerText=qty;
@@ -139,8 +119,6 @@ const itemName=document.getElementById('itemName').value;
 const brand=document.getElementById('brand').value;
 
 if(!itemName) return;
-
-vibrate();
 
 lists[currentListIndex].items.push({
 itemName,
@@ -154,15 +132,13 @@ document.getElementById('itemName').value='';
 document.getElementById('brand').value='';
 
 qty=1;
-document.getElementById('qtyValue').innerText=qty;
+document.getElementById('qtyValue').innerText=1;
 
 save();
 renderItems();
 }
 
 function toggleComplete(index){
-
-vibrate();
 
 lists[currentListIndex].items[index].completed=
 !lists[currentListIndex].items[index].completed;
@@ -173,23 +149,10 @@ renderItems();
 
 function deleteItem(index){
 
-vibrate();
-
 lists[currentListIndex].items.splice(index,1);
 
 save();
 renderItems();
-}
-
-function toggleCompletedSection(){
-
-completedCollapsed=!completedCollapsed;
-
-document.getElementById('completedContainer').style.display=
-completedCollapsed?'none':'block';
-
-document.getElementById('completedArrow').innerText=
-completedCollapsed?'›':'⌄';
 }
 
 function updateProgress(){
@@ -202,34 +165,37 @@ const total=items.length;
 
 const percent=total?Math.round((completed/total)*100):0;
 
-document.getElementById('progressText').innerText=
-`${completed} / ${total} completed`;
+document.getElementById('progressText').innerText=`${completed} / ${total} completed`;
 
-document.getElementById('progressPercent').innerText=
-`${percent}%`;
+document.getElementById('progressPercent').innerText=`${percent}%`;
 
 document.querySelector('.progress-ring').style.background=
-`conic-gradient(#9db6ff ${percent*3.6}deg,#edf1ff 0deg)`;
+`conic-gradient(#0d6e80 ${percent*3.6}deg,#d8eef2 0deg)`;
 }
 
 function finishShopping(){
 
-vibrate();
-
 const current=lists[currentListIndex];
 
 history.unshift({
-date:new Date().toLocaleDateString(),
 name:current.name,
 completed:current.items.filter(i=>i.completed),
-remaining:current.items.filter(i=>!i.completed)
+remaining:current.items.filter(i=>!i.completed),
+allItems:current.items
 });
 
-history = history.slice(0,2);
+history=history.slice(0,2);
+
+lists.splice(currentListIndex,1);
 
 save();
 
-alert('Saved to history ✨');
+renderLists();
+renderHistory();
+
+alert('Moved to history ✨');
+
+showPage('homePage');
 }
 
 function renderHistory(){
@@ -238,12 +204,7 @@ const container=document.getElementById('historyContainer');
 
 container.innerHTML='';
 
-if(history.length===0){
-container.innerHTML='<div class="history-card">No shopping history yet ✨</div>';
-return;
-}
-
-history.forEach(entry=>{
+history.forEach((entry,index)=>{
 
 const div=document.createElement('div');
 
@@ -251,52 +212,89 @@ div.className='history-card';
 
 div.innerHTML=`
 <div class="history-top">
-<div>
+
 <div class="history-month">${entry.name}</div>
-<div>${entry.date}</div>
+
+<button class="delete-btn"
+onclick="deleteHistory(${index})">
+🗑
+</button>
+
 </div>
 
 <div>
-✓ ${entry.completed.length} &nbsp; ✕ ${entry.remaining.length}
-</div>
+<strong>Entire List</strong><br>
+
+${entry.allItems.map(i=>
+`<span class="history-chip">${i.itemName}</span>`).join('')}
 </div>
 
-<div class="history-section">
-<div><strong>Purchased</strong></div>
+<br>
+
+<div>
+<strong>Purchased</strong><br>
+
 ${entry.completed.map(i=>
 `<span class="history-chip green">${i.itemName}</span>`).join('')}
 </div>
 
-<div class="history-section">
-<div><strong>Not Found</strong></div>
+<br>
+
+<div>
+<strong>Not Found</strong><br>
+
 ${entry.remaining.map(i=>
 `<span class="history-chip red">${i.itemName}</span>`).join('')}
 </div>
+
+<button class="create-btn"
+onclick="addHistory(${index})">
+Add To New List
+</button>
 `;
 
 container.appendChild(div);
-
 });
 }
 
-function copyItem(text){
-vibrate();
-navigator.clipboard.writeText(text);
+function addHistory(index){
+
+const entry=history[index];
+
+lists.push({
+name:entry.name + ' Copy',
+items:entry.allItems.map(i=>({
+...i,
+completed:false
+}))
+});
+
+save();
+
+renderLists();
+
+alert('Added to new list ✨');
+
+showPage('homePage');
+}
+
+function deleteHistory(index){
+history.splice(index,1);
+save();
+renderHistory();
 }
 
 function renderItems(){
 
-const active=document.getElementById('itemsContainer');
-const completed=document.getElementById('completedContainer');
+const container=document.getElementById('itemsContainer');
 
-active.innerHTML='';
-completed.innerHTML='';
+container.innerHTML='';
 
 lists[currentListIndex].items.forEach((item,index)=>{
 
 const div=document.createElement('div');
 
-div.className=item.completed?'item-card completed':'item-card';
+div.className='premium-card item-card';
 
 div.innerHTML=`
 <div class="item-left">
@@ -312,11 +310,6 @@ div.innerHTML=`
 <div class="item-actions">
 
 <button class="icon-btn"
-onclick="copyItem('${item.brand} ${item.itemName}')">
-⧉
-</button>
-
-<button class="icon-btn"
 onclick="toggleComplete(${index})">
 ${item.completed?'↺':'✓'}
 </button>
@@ -329,11 +322,7 @@ onclick="deleteItem(${index})">
 </div>
 `;
 
-if(item.completed){
-completed.appendChild(div);
-}else{
-active.appendChild(div);
-}
+container.appendChild(div);
 
 });
 
