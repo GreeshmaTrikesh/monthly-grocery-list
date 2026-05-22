@@ -362,3 +362,90 @@ renderHistory();
 }
 
 renderAll();
+
+
+let masterItems = JSON.parse(localStorage.getItem('masterItems') || '[]');
+
+function saveMasterItems(){
+ localStorage.setItem('masterItems', JSON.stringify(masterItems));
+}
+
+function renderMasterItems(){
+ const container = document.getElementById('masterItemsContainer');
+ const dropdown = document.getElementById('activeListDropdown');
+
+ if(!container || !dropdown) return;
+
+ container.innerHTML = masterItems.map((item,index)=>`
+   <div class="master-item">
+      <input type="checkbox" class="master-check" value="${item.name}">
+      <span>${item.name}</span>
+   </div>
+ `).join('');
+
+ dropdown.innerHTML = activeLists.map((list,index)=>`
+   <option value="${index}">${list.name}</option>
+ `).join('');
+}
+
+function addMasterItem(){
+ const input = document.getElementById('masterItemInput');
+ if(!input || !input.value.trim()) return;
+
+ const exists = masterItems.some(
+   i => i.name.toLowerCase() === input.value.trim().toLowerCase()
+ );
+
+ if(exists){
+   alert('Item already exists');
+   return;
+ }
+
+ masterItems.push({
+   name: input.value.trim()
+ });
+
+ input.value = '';
+ saveMasterItems();
+ renderMasterItems();
+}
+
+function addSelectedToList(){
+ const dropdown = document.getElementById('activeListDropdown');
+ if(!dropdown) return;
+
+ const listIndex = dropdown.value;
+ const selected = [...document.querySelectorAll('.master-check:checked')]
+   .map(x => x.value);
+
+ if(selected.length === 0) return;
+
+ selected.forEach(itemName => {
+
+   const exists = activeLists[listIndex].items.some(
+      i => i.name.toLowerCase() === itemName.toLowerCase()
+   );
+
+   if(!exists){
+      activeLists[listIndex].items.push({
+         name:itemName,
+         quantity:1,
+         unit:'pcs',
+         completed:false
+      });
+   }
+ });
+
+ localStorage.setItem('activeLists', JSON.stringify(activeLists));
+
+ if(typeof renderLists === 'function'){
+    renderLists();
+ }
+
+ alert('Items added successfully');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+ setTimeout(renderMasterItems, 500);
+});
+

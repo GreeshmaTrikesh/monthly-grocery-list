@@ -120,5 +120,21 @@
 </div>
 
 <script src="app.js"></script>
+
+<div id="master-page" style="display:none;padding:24px;">
+  <h2 style="margin-bottom:16px;">Master List</h2>
+
+  <div class="master-panel">
+    <input id="masterItemInput" placeholder="Add master item" class="text-input"/>
+    <button class="primary-btn" onclick="addMasterItem()">Add Master Item</button>
+
+    <div id="masterItemsContainer"></div>
+
+    <div class="master-actions">
+      <select id="activeListDropdown"></select>
+      <button class="primary-btn" onclick="addSelectedToList()">Add Selected Items</button>
+    </div>
+  </div>
 </body>
+
 </html>
