@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <div class="app">
@@ -17,7 +16,7 @@
 <div id="homePage">
 
 <div class="hero-card">
-<div class="hero-content">
+<div>
 <div class="hero-emoji">🛒 ✨ 🥛</div>
 <h1>Grocery List</h1>
 <p>Your shopping companion</p>
@@ -54,7 +53,18 @@
 <div class="input-card">
 
 <div class="row-top">
-<input id="itemName" placeholder="Item name">
+<input id="itemName" list="itemSuggestions" placeholder="Item name">
+
+<datalist id="itemSuggestions">
+<option>Rice</option>
+<option>Milk</option>
+<option>Oil</option>
+<option>Surf Excel</option>
+<option>Dove Soap</option>
+<option>Sugar</option>
+<option>Salt</option>
+<option>Eggs</option>
+</datalist>
 
 <input id="qty" type="number" placeholder="Qty">
 </div>
@@ -68,18 +78,15 @@
 </div>
 
 <div class="row-bottom">
-<input id="brand" list="brands" placeholder="Brand">
-<datalist id="brands">
+<input id="brand" list="brandSuggestions" placeholder="Brand">
+
+<datalist id="brandSuggestions">
 <option>India Gate</option>
-<option>Aashirvaad</option>
 <option>Fortune</option>
-<option>Tata Salt</option>
-<option>Surf Excel</option>
-<option>Dove</option>
 <option>Amul</option>
-<option>DMart Premia</option>
-<option>Harpic</option>
-<option>Good Life</option>
+<option>Premia</option>
+<option>Tata</option>
+<option>Dabur</option>
 </datalist>
 
 <button class="add-btn" onclick="addItem()">Add</button>
@@ -89,9 +96,15 @@
 
 <div id="itemsContainer"></div>
 
-<div class="completed-section">
+<div class="completed-wrapper">
+
+<div class="completed-header" onclick="toggleCompletedSection()">
 <div class="completed-title">Completed Items</div>
+<div id="completedArrow">⌄</div>
+</div>
+
 <div id="completedContainer"></div>
+
 </div>
 
 </div>
@@ -99,6 +112,5 @@
 </div>
 
 <script src="app.js"></script>
-
 </body>
 </html>
