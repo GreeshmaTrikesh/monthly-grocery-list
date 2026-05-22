@@ -1,111 +1,88 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
 <title>Grocery List</title>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f7486">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
+<link rel='stylesheet' href='style.css'>
 </head>
 <body>
 
-<div id="toast" class="toast"></div>
+<div id='toast' class='toast'></div>
 
-<section id="homePage" class="page active">
-
-<div class="hero">
-<div class="blur one"></div>
-<div class="blur two"></div>
-
-<div class="hero-small">Your smart shopping space ✨</div>
+<section id='home' class='page active'>
+<div class='hero'>
+<small>Your smart shopping space ✨</small>
 <h1>Grocery List</h1>
 <p>Shopping companion</p>
 </div>
 
-<div class="card compact-card">
-<input id="listInput" placeholder="Name your list">
-<button onclick="createList()">Create</button>
+<div class='card create-card'>
+<input id='listName' placeholder='Name your list'>
+<button class='primary' onclick='createList()'>Create</button>
 </div>
 
-<div id="homeLists"></div>
-
+<div id='homeLists'></div>
 </section>
 
-<section id="listsPage" class="page">
-<div class="section-title">Active Lists</div>
-<div id="listsContainer"></div>
+<section id='lists' class='page'>
+<div id='listsWrap'></div>
 </section>
 
-<section id="historyPage" class="page">
-<div class="section-title">History</div>
-<div id="historyContainer"></div>
+<section id='history' class='page'>
+<h2>History</h2>
+<div id='historyWrap'></div>
 </section>
 
-<section id="listPage" class="page">
-<div class="topbar">
-<button class="back-btn" onclick="goLists()">←</button>
-<h2 id="currentTitle"></h2>
+<section id='detail' class='page'>
+<div class='topbar'>
+<button class='back' onclick='openPage("lists")'>←</button>
+<div class='title' id='title'></div>
 </div>
 
-<div class="card progress-card">
+<div class='card progress'>
 <div>
-<div class="muted">Shopping Progress</div>
-<div class="progress-text" id="progressText">0 / 0 completed</div>
+<h4>Shopping Progress</h4>
+<strong id='progressText'></strong>
+</div>
+<div class='ring' id='ring'><span id='percent'>0%</span></div>
 </div>
 
-<div class="ring">
-<span id="progressPercent">0%</span>
-</div>
-</div>
+<div class='card add-box'>
+<input id='item' placeholder='Item'>
 
-<div class="card add-card">
-
-<input id="itemName" placeholder="Item">
-
-<div class="qty-box">
-<button onclick="changeQty(-1)">−</button>
-<div id="qtyValue">1</div>
-<button onclick="changeQty(1)">+</button>
+<div class='qty'>
+<button onclick='qty(-1)'>−</button>
+<div id='qv'>1</div>
+<button onclick='qty(1)'>+</button>
 </div>
 
-<div class="units">
-<div class="unit active" onclick="selectUnit(this,'kg')">kg</div>
-<div class="unit" onclick="selectUnit(this,'g')">g</div>
-<div class="unit" onclick="selectUnit(this,'L')">L</div>
-<div class="unit" onclick="selectUnit(this,'pcs')">pcs</div>
+<div class='units'>
+<div class='unit active' onclick='unit(this,"kg")'>kg</div>
+<div class='unit' onclick='unit(this,"g")'>g</div>
+<div class='unit' onclick='unit(this,"L")'>L</div>
+<div class='unit' onclick='unit(this,"pcs")'>pcs</div>
 </div>
 
-<input id="brandName" placeholder="Brand (optional)">
-
-<button class="primary-btn" onclick="addItem()">Add Item</button>
+<input id='brand' placeholder='Brand (optional)'>
+<button class='primary' onclick='addItem()'>Add Item</button>
 </div>
 
-<div id="itemsContainer"></div>
+<div id='items'></div>
 
-<div class="card finish-card">
-<div>
-<div class="finish-title">Finish Shopping</div>
-<div class="muted">Move list to history</div>
+<div class='card finish-card'>
+<h2>Finish Shopping</h2>
+<div class='muted'>Move list to history</div><br>
+<button class='primary' onclick='finishShopping()'>Finish</button>
 </div>
-
-<button class="primary-btn" onclick="finishShopping()">Finish</button>
-</div>
-
 </section>
 
-<div class="bottom-nav">
-<button class="nav active" onclick="switchTab('homePage',this)">⌂</button>
-<button class="nav" onclick="switchTab('listsPage',this)">☰</button>
-<button class="nav" onclick="switchTab('historyPage',this)">◷</button>
+<div class='bottom'>
+<button class='nav active' onclick='tab("home",this)'>⌂</button>
+<button class='nav' onclick='tab("lists",this)'>☰</button>
+<button class='nav' onclick='tab("history",this)'>◷</button>
 </div>
 
-<script src="app.js"></script>
+<script src='app.js'></script>
 </body>
 </html>
