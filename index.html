@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,109 +12,115 @@
 <body>
 
 <div class="sidebar">
-<div class="side-item active" onclick="showPage('homePage',this)">🏠<span>Home</span></div>
-<div class="side-item" onclick="showPage('listsPage',this)">📋<span>Lists</span></div>
-<div class="side-item" onclick="showPage('historyPage',this)">🕘<span>History</span></div>
+<button class="nav active">⌂</button>
+<button class="nav">☰</button>
+<button class="nav">◷</button>
 </div>
 
 <div class="app">
 
-<div id="homePage">
-<div class="hero-card">
-<div>
-<div class="hero-mini">Your Smart Shopping Space ✨</div>
+<div class="hero">
+<div class="hero-small">Your smart shopping space ✨</div>
 <h1>Grocery List</h1>
-<p>Monthly grocery companion</p>
-</div>
+<p>Shopping companion</p>
 </div>
 
 <div class="create-card">
-<select id="monthSelect">
-<option value="">Select Month</option>
-<option>January 2026</option>
-<option>February 2026</option>
-<option>March 2026</option>
-<option>April 2026</option>
-<option>May 2026</option>
-<option>June 2026</option>
-<option>Custom</option>
-</select>
-
-<input id="listName" placeholder="Name your list">
-
-<button class="primary-btn" onclick="createList()">Create List</button>
+<input placeholder="Name your list">
+<button>Create</button>
 </div>
 
-<div id="homeLists" class="lists-grid"></div>
-</div>
-
-<div id="listsPage" style="display:none;">
-<div class="page-title">Active Lists</div>
-<div id="listsContainer" class="lists-grid"></div>
-<div id="emptyLists" class="empty-state" style="display:none;">
-No active lists available ✨
-</div>
-</div>
-
-<div id="detailsPage" style="display:none;">
-<div class="top-bar">
-<button class="back-btn" onclick="showPage('listsPage')">←</button>
-<input id="currentListTitle" class="editable-title" onchange="renameList()">
-</div>
-
-<div class="card progress-card">
+<div class="list-card">
 <div>
-<div class="small-text">Shopping Progress</div>
-<div id="progressText">0 / 0 completed</div>
+<div class="list-title">February 2026</div>
+<div class="list-sub">3 items left</div>
+</div>
+<button class="delete">✕</button>
 </div>
 
-<div class="progress-ring">
-<div id="progressPercent">0%</div>
+<div class="progress-card">
+<div>
+<div class="small">Shopping Progress</div>
+<div class="big">2 / 5 completed</div>
+</div>
+
+<div class="ring">
+<div>40%</div>
 </div>
 </div>
 
-<div class="card">
-<input id="itemName" placeholder="Item">
+<div class="input-card">
+<input placeholder="Item">
 
-<div class="qty-row">
 <div class="stepper">
-<button onclick="changeQty(-1)">−</button>
-<div id="qtyValue">1</div>
-<button onclick="changeQty(1)">+</button>
+<button>−</button>
+<div>1</div>
+<button>+</button>
 </div>
 
 <div class="units">
-<button class="unit active" onclick="setUnit(this,'kg')">kg</button>
-<button class="unit" onclick="setUnit(this,'g')">g</button>
-<button class="unit" onclick="setUnit(this,'L')">L</button>
-<button class="unit" onclick="setUnit(this,'pcs')">pcs</button>
+<div class="unit active">kg</div>
+<div class="unit">g</div>
+<div class="unit">L</div>
+<div class="unit">pcs</div>
+</div>
+
+<input placeholder="Brand (optional)">
+
+<button class="add-btn">Add Item</button>
+</div>
+
+<div class="item-card">
+<div class="left">
+<div class="pill blue">Rice</div>
+<div class="pill gray">5kg</div>
+<div class="pill soft">India Gate</div>
+</div>
+
+<div class="actions">
+<button>⧉</button>
+<button>✓</button>
+<button>⌫</button>
 </div>
 </div>
 
-<input id="brand" placeholder="Brand (optional)">
-
-<button class="primary-btn" onclick="addItem()">Add Item</button>
-</div>
-
-<div id="itemsContainer"></div>
-
-<div class="card finish-card">
-<div>
+<div class="finish-card">
+<div class="finish-text">
 <div class="finish-title">Finish Shopping</div>
-<div class="small-text">Move list to history</div>
+<div class="finish-sub">Move list to history</div>
 </div>
 
-<button class="primary-btn small-btn" onclick="finishShopping()">Finish</button>
+<button class="finish-btn">Finish</button>
+</div>
+
+<div class="history-card">
+<div class="history-top">
+<div>
+<div class="history-title">January 2026</div>
+<div class="history-sub">
+✓ Purchased: 8 <br>
+✕ Not Found: Eggs, Dove Soap
 </div>
 </div>
 
-<div id="historyPage" style="display:none;">
-<div class="page-title">History ✨</div>
-<div id="historyContainer"></div>
+<button class="delete">⌫</button>
+</div>
+
+<div class="history-items">
+<div class="history-chip success">✓ Rice</div>
+<div class="history-chip success">✓ Milk</div>
+<div class="history-chip fail">✕ Eggs</div>
+<div class="history-chip fail">✕ Dove Soap</div>
+</div>
+
+<button class="history-btn">Add Selected To New List</button>
+</div>
+
+<div class="toast">
+✓ Shopping moved to history
 </div>
 
 </div>
 
-<script src="app.js"></script>
 </body>
 </html>

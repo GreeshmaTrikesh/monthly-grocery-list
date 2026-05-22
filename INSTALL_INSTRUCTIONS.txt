@@ -1,0 +1,4 @@
+1. Copy icon-192.png, icon-512.png, and manifest.json into your app root folder.
+2. Add the provided HTML snippet inside the <head> of index.html.
+3. Redeploy to Vercel.
+4. Remove old home screen shortcut and re-add it to see the updated icon.
