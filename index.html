@@ -1,31 +1,33 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monthly Grocery</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Grocery</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🛒 Monthly Grocery</h1>
-    <p class="subtitle">Reusable family shopping list</p>
 
-    <div class="card">
-      <h2>Add Item</h2>
-      <input id="itemName" placeholder="Item Name" />
-      <input id="itemQty" placeholder="Quantity" />
-      <input id="itemBrand" placeholder="Brand" />
-      <button onclick="addItem()">Add Item</button>
-    </div>
+<div class="container">
 
-    <div class="card">
-      <h2>Your List</h2>
-      <div id="list"></div>
-    </div>
-  </div>
+<div class="header">
+<h1>🛒 Family Grocery</h1>
+<p>Reusable family shopping lists</p>
+</div>
 
-  <script src="app.js"></script>
+<div class="card">
+<h2>Create New List</h2>
+<input id="listName" placeholder="Example: Mom List">
+<button onclick="createList()">Create List</button>
+</div>
+
+<div id="listsContainer"></div>
+
+</div>
+
+<script src="app.js"></script>
+
 </body>
 </html>

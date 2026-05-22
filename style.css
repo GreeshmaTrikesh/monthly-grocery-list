@@ -1,74 +1,68 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  margin: 0;
-  padding: 0;
+
+body{
+background:#f4f6f9;
+font-family:Arial,sans-serif;
+margin:0;
+padding:0;
 }
 
-.container {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
+.container{
+max-width:700px;
+margin:auto;
+padding:20px;
 }
 
-h1 {
-  text-align: center;
+.header{
+text-align:center;
+margin-bottom:20px;
 }
 
-.subtitle {
-  text-align: center;
-  color: #666;
-  margin-bottom: 20px;
+.card,.list-card{
+background:white;
+padding:20px;
+border-radius:18px;
+margin-bottom:20px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+input,select{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+border:1px solid #ddd;
+box-sizing:border-box;
 }
 
-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:black;
+color:white;
+cursor:pointer;
 }
 
-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: black;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+.inline{
+display:flex;
+gap:10px;
 }
 
-.item {
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 12px;
+.item{
+border:1px solid #eee;
+padding:12px;
+border-radius:12px;
+margin-top:12px;
 }
 
-.item-title {
-  font-weight: bold;
-  margin-bottom: 4px;
+.actions{
+display:flex;
+gap:10px;
+margin-top:10px;
 }
 
-.actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-
-.small-btn {
-  flex: 1;
-  background: #f0f0f0;
-  color: black;
+.small-btn{
+background:#f0f0f0;
+color:black;
 }
