@@ -1,9 +1,10 @@
 
-Grocery List v21
+FULL BUILD PACKAGE
 
-Features Added:
-- Master List tab
-- Add selected items to existing active lists
-- Duplicate prevention
-- History selected item transfer
-- Premium compact UI direction
+Files:
+- index.html
+- style.css
+- app.js
+
+Deploy:
+Upload all files to Vercel project root.

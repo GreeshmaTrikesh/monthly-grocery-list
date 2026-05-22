@@ -1,5 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grocery List</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<!-- v21 Upgrade Placeholder -->
-<nav>
-  Home | Lists | Master | History
-</nav>
+<div class="hero">
+  <div class="small">Your smart shopping space ✨</div>
+  <h1>Grocery List</h1>
+  <p>Shopping companion</p>
+</div>
+
+<div class="card">
+  <input id="listName" placeholder="Name your list">
+  <button onclick="createList()">Create</button>
+</div>
+
+<div id="lists"></div>
+
+<div class="bottom-nav">
+  <div>⌂</div>
+  <div>☰</div>
+  <div>✦</div>
+  <div>◷</div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
