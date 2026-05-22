@@ -370,6 +370,7 @@ function saveMaster(){
 localStorage.setItem('masterItems', JSON.stringify(masterItems));
 }
 
+
 function renderMaster(){
 
 const wrap = document.getElementById('masterItems');
@@ -379,8 +380,24 @@ if(!wrap || !dropdown) return;
 
 wrap.innerHTML = masterItems.map((item,index)=>`
 <div class="master-item">
-<input type="checkbox" class="masterCheck" value="${item}">
-<div>${item}</div>
+
+<div class="master-left">
+
+<input type="checkbox" class="masterCheck master-check" value="${item.name}">
+
+<div class="master-details">
+<div class="master-name">${item.name}</div>
+<div class="master-meta">${item.brand || 'No brand'} • ${item.qty} ${item.unit}</div>
+</div>
+
+</div>
+
+<div class="master-qty">
+<button onclick="updateMasterQty(${index},-1)">−</button>
+<div>${item.qty}</div>
+<button onclick="updateMasterQty(${index},1)">+</button>
+</div>
+
 </div>
 `).join('');
 
@@ -397,7 +414,7 @@ const input = document.getElementById('masterInput');
 if(!input.value.trim()) return;
 
 const exists = masterItems.some(
-x => x.toLowerCase() === input.value.trim().toLowerCase()
+x => x.name.toLowerCase() === input.value.trim().toLowerCase()
 );
 
 if(exists){
@@ -405,7 +422,12 @@ toast('Already exists');
 return;
 }
 
-masterItems.unshift(input.value.trim());
+masterItems.unshift({
+name:input.value.trim(),
+qty:1,
+unit:'pcs',
+brand:''
+});
 
 input.value='';
 
@@ -413,6 +435,18 @@ saveMaster();
 renderMaster();
 
 toast('✨ Added to master');
+}
+
+function updateMasterQty(index,change){
+
+masterItems[index].qty += change;
+
+if(masterItems[index].qty < 1){
+masterItems[index].qty = 1;
+}
+
+saveMaster();
+renderMaster();
 }
 
 function addSelectedMasterItems(){
@@ -428,19 +462,21 @@ const selected = [...document.querySelectorAll('.masterCheck:checked')]
 
 let added = 0;
 
-selected.forEach(item=>{
+selected.forEach(itemName=>{
+
+const master = masterItems.find(x=>x.name===itemName);
 
 const exists = targetList.items.some(
-i => i.name.toLowerCase() === item.toLowerCase()
+i => i.name.toLowerCase() === itemName.toLowerCase()
 );
 
-if(!exists){
+if(!exists && master){
 
 targetList.items.push({
-name:item,
-qty:1,
-unit:'pcs',
-brand:'',
+name:master.name,
+qty:master.qty,
+unit:master.unit,
+brand:master.brand,
 done:false
 });
 
@@ -463,5 +499,50 @@ oldRenderAll();
 
 renderMaster();
 
+}
+
+
+
+function getHistoryDropdownHTML(historyIndex){
+
+return `
+<select class="history-select" onchange="addHistoryToExistingList(${historyIndex}, this.value)">
+<option value="">Add to active list</option>
+${lists.map(list=>`
+<option value="${list.id}">${list.name}</option>
+`).join('')}
+</select>
+`;
+
+}
+
+function addHistoryToExistingList(historyIndex,listId){
+
+if(!listId) return;
+
+const historyList = history[historyIndex];
+const targetList = lists.find(x=>x.id===Number(listId));
+
+if(!historyList || !targetList) return;
+
+let added = 0;
+
+historyList.items.forEach(item=>{
+
+const exists = targetList.items.some(
+x=>x.name.toLowerCase()===item.name.toLowerCase()
+);
+
+if(!exists){
+targetList.items.push(item);
+added++;
+}
+
+});
+
+save();
+renderAll();
+
+toast(`✨ ${added} items added`);
 }
 
