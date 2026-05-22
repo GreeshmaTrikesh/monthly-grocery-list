@@ -3,8 +3,9 @@ let lists = JSON.parse(localStorage.getItem('familyLists')) || [];
 let history = JSON.parse(localStorage.getItem('historyLists')) || [];
 
 let currentListIndex = 0;
-let selectedUnit = 'kg';
 let qty = 1;
+let selectedUnit = 'kg';
+let selectedHistoryItems = {};
 
 function save(){
 localStorage.setItem('familyLists',JSON.stringify(lists));
@@ -13,19 +14,18 @@ localStorage.setItem('historyLists',JSON.stringify(history));
 
 function setActive(el){
 document.querySelectorAll('.side-item').forEach(i=>i.classList.remove('active'));
-el.classList.add('active');
+if(el) el.classList.add('active');
 }
 
 function showPage(page,el){
-
-document.getElementById('homePage').style.display='none';
-document.getElementById('detailsPage').style.display='none';
-document.getElementById('historyPage').style.display='none';
+['homePage','listsPage','detailsPage','historyPage']
+.forEach(id=>document.getElementById(id).style.display='none');
 
 document.getElementById(page).style.display='block';
 
 if(el) setActive(el);
 
+renderLists();
 if(page==='historyPage') renderHistory();
 }
 
@@ -36,15 +36,10 @@ document.getElementById('listName').value=e.target.value;
 });
 
 function createList(){
-
-let name=document.getElementById('listName').value.trim();
-
+const name=document.getElementById('listName').value.trim();
 if(!name) return;
 
-lists.push({
-name:name,
-items:[]
-});
+lists.push({name,items:[]});
 
 document.getElementById('listName').value='';
 
@@ -53,29 +48,31 @@ renderLists();
 }
 
 function renderLists(){
+const containers=['listsContainer','homeLists'];
 
-const container=document.getElementById('listsContainer');
+containers.forEach(id=>{
+const container=document.getElementById(id);
+if(!container) return;
 container.innerHTML='';
 
 lists.forEach((list,index)=>{
-
 const div=document.createElement('div');
-
 div.className='list-card';
 
 div.innerHTML=`
-<button class="delete-btn"
-onclick="event.stopPropagation();deleteList(${index})">
-✕
-</button>
-
 <div>${list.name}</div>
+<button class="delete-btn"
+onclick="event.stopPropagation();deleteList(${index})">✕</button>
 `;
 
 div.onclick=()=>openList(index);
 
 container.appendChild(div);
 });
+});
+
+document.getElementById('emptyLists').style.display =
+lists.length ? 'none':'block';
 }
 
 function deleteList(index){
@@ -85,38 +82,39 @@ renderLists();
 }
 
 function openList(index){
-
 currentListIndex=index;
 
-document.getElementById('currentListNameHeader').innerText=lists[index].name;
+document.getElementById('currentListTitle').value =
+lists[index].name;
 
 showPage('detailsPage');
 
 renderItems();
 }
 
-function selectUnit(el,unit){
+function renameList(){
+lists[currentListIndex].name =
+document.getElementById('currentListTitle').value;
 
-selectedUnit=unit;
-
-document.querySelectorAll('.unit-pill').forEach(btn=>{
-btn.classList.remove('active');
-});
-
-el.classList.add('active');
+save();
+renderLists();
 }
 
 function changeQty(change){
-
 qty=Math.max(1,qty+change);
-
 document.getElementById('qtyValue').innerText=qty;
 }
 
-function addItem(){
+function setUnit(el,unit){
+selectedUnit=unit;
 
-const itemName=document.getElementById('itemName').value;
-const brand=document.getElementById('brand').value;
+document.querySelectorAll('.unit').forEach(u=>u.classList.remove('active'));
+el.classList.add('active');
+}
+
+function addItem(){
+const itemName=document.getElementById('itemName').value.trim();
+const brand=document.getElementById('brand').value.trim();
 
 if(!itemName) return;
 
@@ -132,15 +130,14 @@ document.getElementById('itemName').value='';
 document.getElementById('brand').value='';
 
 qty=1;
-document.getElementById('qtyValue').innerText=1;
+document.getElementById('qtyValue').innerText='1';
 
 save();
 renderItems();
 }
 
 function toggleComplete(index){
-
-lists[currentListIndex].items[index].completed=
+lists[currentListIndex].items[index].completed =
 !lists[currentListIndex].items[index].completed;
 
 save();
@@ -148,40 +145,65 @@ renderItems();
 }
 
 function deleteItem(index){
-
 lists[currentListIndex].items.splice(index,1);
-
 save();
 renderItems();
 }
 
 function updateProgress(){
-
 const items=lists[currentListIndex].items;
-
 const completed=items.filter(i=>i.completed).length;
-
 const total=items.length;
-
 const percent=total?Math.round((completed/total)*100):0;
 
-document.getElementById('progressText').innerText=`${completed} / ${total} completed`;
+document.getElementById('progressText').innerText =
+`${completed} / ${total} completed`;
 
-document.getElementById('progressPercent').innerText=`${percent}%`;
+document.getElementById('progressPercent').innerText =
+`${percent}%`;
 
-document.querySelector('.progress-ring').style.background=
-`conic-gradient(#0d6e80 ${percent*3.6}deg,#d8eef2 0deg)`;
+document.querySelector('.progress-ring').style.background =
+`conic-gradient(#0f7486 ${percent*3.6}deg,#d9eef2 0deg)`;
+}
+
+function renderItems(){
+const container=document.getElementById('itemsContainer');
+container.innerHTML='';
+
+lists[currentListIndex].items.forEach((item,index)=>{
+const div=document.createElement('div');
+div.className=`card item-card ${item.completed?'completed':''}`;
+
+div.innerHTML=`
+<div class="item-left">
+<div class="pill item-title">${item.itemName}</div>
+<div class="pill item-qty">${item.qty}${item.unit}</div>
+${item.brand ? `<div class="pill item-brand">${item.brand}</div>`:''}
+</div>
+
+<div class="item-actions">
+<button class="icon-btn"
+onclick="toggleComplete(${index})">
+${item.completed?'↺':'✓'}
+</button>
+
+<button class="icon-btn"
+onclick="deleteItem(${index})">🗑</button>
+</div>
+`;
+
+container.appendChild(div);
+});
+
+updateProgress();
 }
 
 function finishShopping(){
-
 const current=lists[currentListIndex];
 
 history.unshift({
 name:current.name,
-completed:current.items.filter(i=>i.completed),
-remaining:current.items.filter(i=>!i.completed),
-allItems:current.items
+items:current.items
 });
 
 history=history.slice(0,2);
@@ -198,84 +220,49 @@ alert('Moved to history ✨');
 showPage('homePage');
 }
 
-function renderHistory(){
-
-const container=document.getElementById('historyContainer');
-
-container.innerHTML='';
-
-history.forEach((entry,index)=>{
-
-const div=document.createElement('div');
-
-div.className='history-card';
-
-div.innerHTML=`
-<div class="history-top">
-
-<div class="history-month">${entry.name}</div>
-
-<button class="delete-btn"
-onclick="deleteHistory(${index})">
-🗑
-</button>
-
-</div>
-
-<div>
-<strong>Entire List</strong><br>
-
-${entry.allItems.map(i=>
-`<span class="history-chip">${i.itemName}</span>`).join('')}
-</div>
-
-<br>
-
-<div>
-<strong>Purchased</strong><br>
-
-${entry.completed.map(i=>
-`<span class="history-chip green">${i.itemName}</span>`).join('')}
-</div>
-
-<br>
-
-<div>
-<strong>Not Found</strong><br>
-
-${entry.remaining.map(i=>
-`<span class="history-chip red">${i.itemName}</span>`).join('')}
-</div>
-
-<button class="create-btn"
-onclick="addHistory(${index})">
-Add To New List
-</button>
-`;
-
-container.appendChild(div);
-});
+function toggleHistory(index){
+const el=document.getElementById(`history-${index}`);
+el.style.display = el.style.display==='block' ? 'none':'block';
 }
 
-function addHistory(index){
+function toggleHistoryItem(historyIndex,itemIndex,el){
+if(!selectedHistoryItems[historyIndex]){
+selectedHistoryItems[historyIndex]=[];
+}
 
-const entry=history[index];
+const arr=selectedHistoryItems[historyIndex];
+
+if(arr.includes(itemIndex)){
+selectedHistoryItems[historyIndex]=arr.filter(i=>i!==itemIndex);
+el.classList.remove('selected-chip');
+}else{
+arr.push(itemIndex);
+el.classList.add('selected-chip');
+}
+}
+
+function addSelected(historyIndex){
+const entry=history[historyIndex];
+
+const selected=(selectedHistoryItems[historyIndex]||[])
+.map(i=>entry.items[i]);
+
+if(!selected.length) return;
 
 lists.push({
 name:entry.name + ' Copy',
-items:entry.allItems.map(i=>({
+items:selected.map(i=>({
 ...i,
 completed:false
 }))
 });
 
 save();
-
 renderLists();
 
-alert('Added to new list ✨');
+alert('Selected items added ✨');
 
-showPage('homePage');
+showPage('listsPage');
 }
 
 function deleteHistory(index){
@@ -284,49 +271,60 @@ save();
 renderHistory();
 }
 
-function renderItems(){
-
-const container=document.getElementById('itemsContainer');
-
+function renderHistory(){
+const container=document.getElementById('historyContainer');
 container.innerHTML='';
 
-lists[currentListIndex].items.forEach((item,index)=>{
+history.forEach((entry,index)=>{
+
+const purchased=entry.items.filter(i=>i.completed).length;
+const notFound=entry.items.filter(i=>!i.completed).length;
 
 const div=document.createElement('div');
-
-div.className='premium-card item-card';
+div.className='history-card';
 
 div.innerHTML=`
-<div class="item-left">
+<div class="history-summary"
+onclick="toggleHistory(${index})">
 
-<div class="pill item-title">${item.itemName}</div>
+<div>
+<div style="font-size:22px;font-weight:700;">
+${entry.name}
+</div>
 
-<div class="pill item-qty">${item.qty}${item.unit}</div>
+<div class="summary-counts">
+✓ ${purchased} Purchased • ✕ ${notFound} Not Found
+</div>
+</div>
 
-<div class="pill item-brand">${item.brand}</div>
+<button class="delete-btn"
+onclick="event.stopPropagation();deleteHistory(${index})">
+🗑
+</button>
 
 </div>
 
-<div class="item-actions">
+<div class="history-details" id="history-${index}">
 
-<button class="icon-btn"
-onclick="toggleComplete(${index})">
-${item.completed?'↺':'✓'}
-</button>
+${entry.items.map((item,itemIndex)=>`
+<span class="history-chip"
+onclick="toggleHistoryItem(${index},${itemIndex},this)">
+${item.itemName}
+</span>
+`).join('')}
 
-<button class="icon-btn"
-onclick="deleteItem(${index})">
-🗑
+<div class="action-row">
+<button class="primary-btn"
+onclick="addSelected(${index})">
+Add Selected To New List
 </button>
+</div>
 
 </div>
 `;
 
 container.appendChild(div);
-
 });
-
-updateProgress();
 }
 
 renderLists();
