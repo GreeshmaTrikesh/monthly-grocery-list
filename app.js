@@ -1,7 +1,6 @@
 
 let lists = JSON.parse(localStorage.getItem('lists') || '[]');
 let historyLists = JSON.parse(localStorage.getItem('historyLists') || '[]');
-let masterItems = JSON.parse(localStorage.getItem('masterItems') || '[]');
 
 let currentListId = null;
 let qty = 1;
@@ -11,7 +10,6 @@ let selectedHistory = {};
 function save(){
 localStorage.setItem('lists', JSON.stringify(lists));
 localStorage.setItem('historyLists', JSON.stringify(historyLists));
-localStorage.setItem('masterItems', JSON.stringify(masterItems));
 }
 
 function toast(msg){
@@ -34,119 +32,6 @@ openPage(id);
 
 document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
 if(el) el.classList.add('active');
-}
-
-
-function itemExists(items,name){
-return items.some(i=>i.name.toLowerCase()===name.toLowerCase());
-}
-
-function renderMasterOptions(){
-const select = document.getElementById('masterTargetList');
-if(!select) return;
-
-select.innerHTML = lists.map(l=>`<option value="${l.id}">${l.name}</option>`).join('');
-}
-
-function addMasterItem(){
-const input = document.getElementById('masterInput');
-const value = input.value.trim();
-
-if(!value) return;
-
-if(masterItems.some(i=>i.name.toLowerCase()===value.toLowerCase())){
-toast('Already exists');
-return;
-}
-
-masterItems.unshift({id:Date.now(),name:value,selected:false});
-input.value='';
-save();
-renderMaster();
-toast('Added');
-}
-
-function toggleMaster(id){
-const item = masterItems.find(i=>i.id===id);
-item.selected = !item.selected;
-renderMaster();
-}
-
-function renderMaster(){
-const container = document.getElementById('masterContainer');
-if(!container) return;
-
-renderMasterOptions();
-
-if(!masterItems.length){
-container.innerHTML='<div class="list-card"><div class="list-sub">No master items yet</div></div>';
-return;
-}
-
-container.innerHTML = masterItems.map(item=>`
-<div class="list-card" onclick="toggleMaster(${item.id})">
-<div class="list-left">
-<div class="list-name">${item.selected ? '✓' : '○'} ${item.name}</div>
-</div>
-</div>`).join('');
-}
-
-function addMasterToList(){
-const targetId = Number(document.getElementById('masterTargetList').value);
-const list = lists.find(l=>l.id===targetId);
-const selected = masterItems.filter(i=>i.selected);
-
-if(!list || !selected.length){
-toast('Select items');
-return;
-}
-
-let added = 0;
-
-selected.forEach(item=>{
-if(!itemExists(list.items,item.name)){
-list.items.push({
-id:Date.now()+Math.random(),
-name:item.name,
-brand:'',
-qty:1,
-unit:'pcs',
-done:false
-});
-added++;
-}
-item.selected=false;
-});
-
-save();
-renderAll();
-toast(added ? `Added ${added} items` : 'Items already exist');
-}
-
-function addHistoryToExisting(listId){
-const targetId = Number(document.getElementById(`historyTarget-${listId}`).value);
-const history = historyLists.find(h=>h.id===listId);
-const target = lists.find(l=>l.id===targetId);
-
-const selected = history.items.filter(i=>(selectedHistory[listId] || []).includes(i.id));
-
-if(!target || !selected.length){
-toast('Select items');
-return;
-}
-
-let added = 0;
-
-selected.forEach(item=>{
-if(!itemExists(target.items,item.name)){
-target.items.push({...item,id:Date.now()+Math.random(),done:false});
-added++;
-}
-});
-
-save();
-renderAll();
-toast(added ? `Added ${added} items` : 'Items already exist');
 }
 
 function createList(){
@@ -212,10 +97,6 @@ container.innerHTML += `
 </div>
 
 <button class="icon-btn" onclick="event.stopPropagation();deleteList(${list.id})">✕</button>
-<select id="historyTarget-${list.id}" class="history-select">
-${lists.map(l=>`<option value="${l.id}">${l.name}</option>`).join('')}
-</select>
-<button class="primary-btn" onclick="addHistoryToExisting(${list.id})">Add To Existing List</button>
 
 </div>
 `;
@@ -404,12 +285,8 @@ ${item.done?'✓':'✕'} ${item.name}
 
 <button class="primary-btn"
 onclick="copySelected(${list.id})">
-Add Selected To List
+Add Selected To New List
 </button>
-<select id="historyTarget-${list.id}" class="history-select">
-${lists.map(l=>`<option value="${l.id}">${l.name}</option>`).join('')}
-</select>
-<button class="primary-btn" onclick="addHistoryToExisting(${list.id})">Add To Existing List</button>
 
 </div>
 
@@ -482,7 +359,6 @@ function renderAll(){
 renderHome();
 renderLists();
 renderHistory();
-renderMaster();
 }
 
 renderAll();
