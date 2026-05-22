@@ -1,8 +1,8 @@
 {
-  "name": "Family Grocery",
-  "short_name": "Grocery",
+  "name": "Groovy Lists",
+  "short_name": "Groovy",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000"
+  "background_color": "#fff8f6",
+  "theme_color": "#fff8f6"
 }
