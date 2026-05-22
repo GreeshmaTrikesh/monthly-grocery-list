@@ -472,3 +472,65 @@ background:#d7eef2;
 max-width:170px;
 }
 }
+
+
+.item-input-row{
+display:flex;
+gap:10px;
+align-items:center;
+margin-bottom:14px;
+}
+
+.item-input-row input{
+flex:1;
+}
+
+.compact-qty{
+display:flex;
+align-items:center;
+gap:8px;
+background:#f4f7f8;
+padding:8px 10px;
+border-radius:14px;
+min-width:120px;
+justify-content:center;
+}
+
+.compact-qty button{
+width:28px;
+height:28px;
+border:none;
+border-radius:10px;
+background:white;
+font-size:16px;
+font-weight:600;
+}
+
+.master-panel{
+margin-top:18px;
+padding:16px;
+border-radius:22px;
+background:white;
+}
+
+.master-item{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 0;
+}
+
+.master-actions{
+margin-top:16px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.master-actions select{
+padding:14px;
+border-radius:14px;
+border:none;
+background:#f4f7f8;
+}
+
