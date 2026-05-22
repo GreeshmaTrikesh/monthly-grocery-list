@@ -1,13 +1,14 @@
 let lists = JSON.parse(localStorage.getItem('familyLists')) || [];
 let currentListIndex = null;
 
-const pastelClasses = ['pastel1','pastel2','pastel3','pastel4','pastel5'];
+const themes = ['theme1','theme2','theme3','theme4','theme5'];
 
 function saveLists(){
 localStorage.setItem('familyLists', JSON.stringify(lists));
 }
 
 function createList(){
+
 const name = document.getElementById('listName').value.trim();
 
 if(!name) return;
@@ -26,15 +27,16 @@ renderLists();
 function renderLists(){
 
 const container = document.getElementById('listsContainer');
+
 container.innerHTML='';
 
 lists.forEach((list,index)=>{
 
 const div = document.createElement('div');
 
-div.className = `list-card ${pastelClasses[index % pastelClasses.length]}`;
+div.className = `list-card ${themes[index % themes.length]}`;
 
-div.innerHTML = list.name;
+div.innerHTML = `<div class="list-name">${list.name}</div>`;
 
 div.onclick = ()=>openList(index);
 
@@ -50,7 +52,8 @@ currentListIndex = index;
 document.getElementById('homePage').style.display='none';
 document.getElementById('detailsPage').style.display='block';
 
-document.getElementById('currentListName').innerText = lists[index].name;
+document.getElementById('currentListName').innerText =
+lists[index].name;
 
 renderItems();
 }
@@ -64,10 +67,17 @@ document.getElementById('detailsPage').style.display='none';
 
 function addItem(){
 
-const itemName = document.getElementById('itemName').value;
-const qty = document.getElementById('qty').value;
-const unit = document.getElementById('unit').value;
-const brand = document.getElementById('brand').value;
+const itemName =
+document.getElementById('itemName').value;
+
+const qty =
+document.getElementById('qty').value;
+
+const unit =
+document.getElementById('unit').value;
+
+const brand =
+document.getElementById('brand').value;
 
 if(!itemName) return;
 
@@ -86,26 +96,31 @@ renderItems();
 
 function renderItems(){
 
-const container = document.getElementById('itemsContainer');
+const container =
+document.getElementById('itemsContainer');
+
 container.innerHTML='';
 
 lists[currentListIndex].items.forEach((item)=>{
 
+const copyValue =
+`${item.brand} ${item.itemName}`;
+
 const div = document.createElement('div');
 
-const copyValue = `${item.brand} ${item.itemName}`;
-
-div.className='item';
+div.className='item-card';
 
 div.innerHTML = `
-<div class="item-details">
-<div class="item-chip item-title">${item.itemName}</div>
-<div class="item-chip">${item.qty} ${item.unit}</div>
-<div class="item-chip">${item.brand}</div>
+<div class="item-left">
+<div class="pill item-title">${item.itemName}</div>
+<div class="pill item-qty">${item.qty} ${item.unit}</div>
+<div class="pill item-brand">${item.brand}</div>
 </div>
 
 <button class="copy-btn"
-onclick="copyItem('${copyValue}')">📋</button>
+onclick="copyItem('${copyValue}')">
+📋
+</button>
 `;
 
 container.appendChild(div);
