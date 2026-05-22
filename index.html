@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Grocery</title>
-<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,9 +17,9 @@
 <p>Your reusable shopping lists</p>
 </div>
 
-<div class="create-card">
-<input id="listName" placeholder="Create new list">
-<button onclick="createList()">Create</button>
+<div class="create-row">
+<input id="listName" class="small-input" placeholder="New list">
+<button class="small-create-btn" onclick="createList()">+</button>
 </div>
 
 <div id="listsContainer"></div>
@@ -30,14 +29,15 @@
 <div id="detailsPage" style="display:none;">
 
 <div class="top-bar">
-<button class="back-btn" onclick="goBack()">← Back</button>
+<button class="back-btn" onclick="goBack()">←</button>
 <h2 id="currentListName"></h2>
 </div>
 
 <div class="card">
-<input id="itemName" placeholder="Item Name">
 
-<div class="inline">
+<div class="item-form-row">
+<input id="itemName" placeholder="Item">
+
 <input id="qty" type="number" placeholder="Qty">
 
 <select id="unit">
@@ -51,9 +51,11 @@
 </select>
 </div>
 
+<div class="brand-row">
 <input id="brand" placeholder="Brand">
+<button class="add-btn" onclick="addItem()">Add</button>
+</div>
 
-<button onclick="addItem()">Add Item</button>
 </div>
 
 <div id="itemsContainer"></div>
