@@ -1,31 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Grocery List</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-<div class="hero">
-  <div class="small">Your smart shopping space ✨</div>
-  <h1>Grocery List</h1>
-  <p>Shopping companion</p>
+<div id="homePage" class="page active">
+  <div class="hero">
+    <div class="hero-small">Your smart shopping space ✨</div>
+    <div class="hero-title">Grocery List</div>
+    <div class="hero-sub">Shopping companion</div>
+  </div>
+
+  <div class="create-card">
+    <input id="listInput" placeholder="Name your list"/>
+    <button onclick="createList()">Create</button>
+  </div>
+
+  <div id="activeLists"></div>
 </div>
 
-<div class="card">
-  <input id="listName" placeholder="Name your list">
-  <button onclick="createList()">Create</button>
+<div id="historyPage" class="page">
+  <div class="page-title">History</div>
+  <div id="historyLists"></div>
 </div>
-
-<div id="lists"></div>
 
 <div class="bottom-nav">
-  <div>⌂</div>
-  <div>☰</div>
-  <div>✦</div>
-  <div>◷</div>
+  <button onclick="showPage('homePage')">⌂</button>
+  <button onclick="showPage('homePage')">☰</button>
+  <button onclick="showPage('homePage')">✦</button>
+  <button onclick="showPage('historyPage')">◷</button>
 </div>
 
 <script src="app.js"></script>
