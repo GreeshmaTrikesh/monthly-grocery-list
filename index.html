@@ -1,40 +1,37 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grocery List</title>
-<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="homePage" class="page active">
-  <div class="hero">
-    <div class="hero-small">Your smart shopping space ✨</div>
-    <div class="hero-title">Grocery List</div>
-    <div class="hero-sub">Shopping companion</div>
-  </div>
-
-  <div class="create-card">
-    <input id="listInput" placeholder="Name your list"/>
-    <button onclick="createList()">Create</button>
-  </div>
-
-  <div id="activeLists"></div>
+<div class="hero">
+<div class="chip">✨ Smart Shopping</div>
+<h1>Grocery List</h1>
+<p>Shopping companion</p>
 </div>
 
-<div id="historyPage" class="page">
-  <div class="page-title">History</div>
-  <div id="historyLists"></div>
+<div class="card">
+<input placeholder="Create a new list">
+<button>Create</button>
 </div>
 
-<div class="bottom-nav">
-  <button onclick="showPage('homePage')">⌂</button>
-  <button onclick="showPage('homePage')">☰</button>
-  <button onclick="showPage('homePage')">✦</button>
-  <button onclick="showPage('historyPage')">◷</button>
+<div class="list-card">
+<div>
+<div class="title">February 2026</div>
+<div class="sub">3 items left</div>
+</div>
+<div class="icon">✕</div>
 </div>
 
-<script src="app.js"></script>
+<div class="nav">
+<button>⌂</button>
+<button>☰</button>
+<button>✦</button>
+<button>◷</button>
+</div>
 </body>
 </html>
