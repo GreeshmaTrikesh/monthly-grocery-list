@@ -1,3 +1,9 @@
-This v17 fix package restores proper page separation and removes the merged homepage issue.
-Replace your existing index.html and manifest.json with these files.
-Keep your logo icons in the same folder.
+
+Grocery List v21
+
+Features Added:
+- Master List tab
+- Add selected items to existing active lists
+- Duplicate prevention
+- History selected item transfer
+- Premium compact UI direction
