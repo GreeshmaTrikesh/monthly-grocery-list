@@ -1,126 +1,230 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Grocery List</title>
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f7486">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#eef5f6;
+color:#10222b;
+}
+
+.page{
+display:none;
+padding:24px 20px 140px;
+}
+
+.page.active{
+display:block;
+}
+
+.hero{
+background:linear-gradient(135deg,#0f7486,#5eb0c4);
+color:white;
+padding:28px;
+border-radius:34px;
+margin-bottom:20px;
+}
+
+.hero h1{
+margin:10px 0;
+font-size:42px;
+}
+
+.card{
+background:white;
+border-radius:28px;
+padding:18px;
+margin-bottom:18px;
+}
+
+input{
+width:100%;
+height:54px;
+border:none;
+border-radius:18px;
+padding:0 16px;
+background:#f3f6f8;
+font-size:16px;
+box-sizing:border-box;
+}
+
+button{
+border:none;
+border-radius:18px;
+height:54px;
+background:#0f7486;
+color:white;
+font-weight:bold;
+width:100%;
+}
+
+.list-card{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.bottom-nav{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+padding:12px 18px;
+border-radius:30px;
+display:flex;
+gap:18px;
+box-shadow:0 8px 24px rgba(0,0,0,0.08);
+}
+
+.nav-btn{
+width:52px;
+height:52px;
+border-radius:18px;
+background:#f4f7f8;
+color:#0f7486;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+}
+
+.nav-btn.active{
+background:#d8eef2;
+}
+
+.toast{
+position:fixed;
+bottom:110px;
+left:50%;
+transform:translateX(-50%);
+background:#0f7486;
+color:white;
+padding:14px 18px;
+border-radius:18px;
+display:none;
+}
+
+.history-chip{
+display:inline-block;
+padding:10px 14px;
+border-radius:14px;
+margin:4px;
+}
+
+.success{
+background:#e5f7eb;
+color:#0d7a40;
+}
+
+.fail{
+background:#fde8e8;
+color:#bf4a4a;
+}
+</style>
 </head>
+
 <body>
 
-<div class="sidebar">
-<button class="nav active">⌂</button>
-<button class="nav">☰</button>
-<button class="nav">◷</button>
-</div>
-
-<div class="app">
-
+<div id="home" class="page active">
 <div class="hero">
-<div class="hero-small">Your smart shopping space ✨</div>
+<div>Your smart shopping space ✨</div>
 <h1>Grocery List</h1>
-<p>Shopping companion</p>
+<div>Shopping companion</div>
 </div>
 
-<div class="create-card">
+<div class="card">
 <input placeholder="Name your list">
+<div style="height:12px"></div>
 <button>Create</button>
 </div>
 
-<div class="list-card">
+<div class="card list-card">
 <div>
-<div class="list-title">February 2026</div>
-<div class="list-sub">3 items left</div>
-</div>
-<button class="delete">✕</button>
+<div style="font-size:26px;font-weight:bold;">February 2026</div>
+<div style="opacity:.6;margin-top:6px;">3 items left</div>
 </div>
 
-<div class="progress-card">
+<div style="width:40px;height:40px;border-radius:14px;background:#f4f7f8;display:flex;align-items:center;justify-content:center;">
+✕
+</div>
+</div>
+</div>
+
+<div id="lists" class="page">
+<div class="card">
+<h2>Active Lists</h2>
+<p>No active lists available ✨</p>
+</div>
+</div>
+
+<div id="history" class="page">
+<div class="card">
+<div style="display:flex;justify-content:space-between;">
 <div>
-<div class="small">Shopping Progress</div>
-<div class="big">2 / 5 completed</div>
-</div>
+<div style="font-size:30px;font-weight:bold;">January 2026</div>
 
-<div class="ring">
-<div>40%</div>
-</div>
-</div>
-
-<div class="input-card">
-<input placeholder="Item">
-
-<div class="stepper">
-<button>−</button>
-<div>1</div>
-<button>+</button>
-</div>
-
-<div class="units">
-<div class="unit active">kg</div>
-<div class="unit">g</div>
-<div class="unit">L</div>
-<div class="unit">pcs</div>
-</div>
-
-<input placeholder="Brand (optional)">
-
-<button class="add-btn">Add Item</button>
-</div>
-
-<div class="item-card">
-<div class="left">
-<div class="pill blue">Rice</div>
-<div class="pill gray">5kg</div>
-<div class="pill soft">India Gate</div>
-</div>
-
-<div class="actions">
-<button>⧉</button>
-<button>✓</button>
-<button>⌫</button>
-</div>
-</div>
-
-<div class="finish-card">
-<div class="finish-text">
-<div class="finish-title">Finish Shopping</div>
-<div class="finish-sub">Move list to history</div>
-</div>
-
-<button class="finish-btn">Finish</button>
-</div>
-
-<div class="history-card">
-<div class="history-top">
-<div>
-<div class="history-title">January 2026</div>
-<div class="history-sub">
-✓ Purchased: 8 <br>
+<div style="margin-top:10px;line-height:1.8;">
+✓ Purchased: 8<br>
 ✕ Not Found: Eggs, Dove Soap
 </div>
 </div>
 
-<button class="delete">⌫</button>
+<div style="width:40px;height:40px;border-radius:14px;background:#f4f7f8;display:flex;align-items:center;justify-content:center;">
+✕
+</div>
 </div>
 
-<div class="history-items">
-<div class="history-chip success">✓ Rice</div>
-<div class="history-chip success">✓ Milk</div>
-<div class="history-chip fail">✕ Eggs</div>
-<div class="history-chip fail">✕ Dove Soap</div>
+<div style="margin-top:18px;">
+<span class="history-chip success">✓ Rice</span>
+<span class="history-chip success">✓ Milk</span>
+<span class="history-chip fail">✕ Eggs</span>
+<span class="history-chip fail">✕ Dove Soap</span>
 </div>
 
-<button class="history-btn">Add Selected To New List</button>
+<div style="height:14px"></div>
+
+<button>Add Selected To New List</button>
+</div>
 </div>
 
-<div class="toast">
+<div class="bottom-nav">
+<div class="nav-btn active" onclick="showPage('home',this)">⌂</div>
+<div class="nav-btn" onclick="showPage('lists',this)">☰</div>
+<div class="nav-btn" onclick="showPage('history',this)">◷</div>
+</div>
+
+<div class="toast" id="toast">
 ✓ Shopping moved to history
 </div>
 
-</div>
+<script>
+function showPage(page,el){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(page).classList.add('active');
+
+document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
+el.classList.add('active');
+}
+
+function showToast(){
+const toast=document.getElementById('toast');
+toast.style.display='block';
+
+setTimeout(()=>{
+toast.style.display='none';
+},2000);
+}
+</script>
 
 </body>
 </html>
