@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-
 <title>Grocery List</title>
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f7486">
-<link rel="apple-touch-icon" href="icon-192.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,27 +18,40 @@
 
 <div id="toast" class="toast"></div>
 
-<div class="page active" id="homePage">
+<section id="homePage" class="page active">
 
 <div class="hero">
+<div class="blur one"></div>
+<div class="blur two"></div>
+
 <div class="hero-small">Your smart shopping space ✨</div>
 <h1>Grocery List</h1>
 <p>Shopping companion</p>
 </div>
 
-<div class="card create-card">
+<div class="card compact-card">
 <input id="listInput" placeholder="Name your list">
 <button onclick="createList()">Create</button>
 </div>
 
+<div id="homeLists"></div>
+
+</section>
+
+<section id="listsPage" class="page">
+<div class="section-title">Active Lists</div>
 <div id="listsContainer"></div>
+</section>
 
-</div>
+<section id="historyPage" class="page">
+<div class="section-title">History</div>
+<div id="historyContainer"></div>
+</section>
 
-<div class="page" id="listPage">
+<section id="listPage" class="page">
 <div class="topbar">
-<button class="back-btn" onclick="goHome()">←</button>
-<h2 id="currentListTitle"></h2>
+<button class="back-btn" onclick="goLists()">←</button>
+<h2 id="currentTitle"></h2>
 </div>
 
 <div class="card progress-card">
@@ -54,10 +65,11 @@
 </div>
 </div>
 
-<div class="card">
+<div class="card add-card">
+
 <input id="itemName" placeholder="Item">
 
-<div class="stepper">
+<div class="qty-box">
 <button onclick="changeQty(-1)">−</button>
 <div id="qtyValue">1</div>
 <button onclick="changeQty(1)">+</button>
@@ -86,18 +98,11 @@
 <button class="primary-btn" onclick="finishShopping()">Finish</button>
 </div>
 
-</div>
-
-<div class="page" id="historyPage">
-<div class="history-header">
-<h2>History</h2>
-</div>
-
-<div id="historyContainer"></div>
-</div>
+</section>
 
 <div class="bottom-nav">
 <button class="nav active" onclick="switchTab('homePage',this)">⌂</button>
+<button class="nav" onclick="switchTab('listsPage',this)">☰</button>
 <button class="nav" onclick="switchTab('historyPage',this)">◷</button>
 </div>
 

@@ -1,27 +1,36 @@
 
-let lists = JSON.parse(localStorage.getItem('groceryLists') || '[]');
-let historyLists = JSON.parse(localStorage.getItem('groceryHistory') || '[]');
+let lists = JSON.parse(localStorage.getItem('lists') || '[]');
+let history = JSON.parse(localStorage.getItem('history') || '[]');
 
 let currentListId = null;
 let qty = 1;
 let selectedUnit = 'kg';
 
 function save(){
-localStorage.setItem('groceryLists',JSON.stringify(lists));
-localStorage.setItem('groceryHistory',JSON.stringify(historyLists));
+localStorage.setItem('lists', JSON.stringify(lists));
+localStorage.setItem('history', JSON.stringify(history));
 }
 
-function toast(msg){
+function showToast(msg){
 const t=document.getElementById('toast');
 t.innerText=msg;
 t.style.display='block';
 setTimeout(()=>{
 t.style.display='none';
-},2000);
+},1800);
+}
+
+function switchTab(id,el){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+
+document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+if(el) el.classList.add('active');
 }
 
 function createList(){
 const input=document.getElementById('listInput');
+
 if(!input.value.trim()) return;
 
 lists.unshift({
@@ -32,52 +41,76 @@ items:[]
 
 input.value='';
 save();
+render();
+showToast('✨ List created');
+}
+
+function render(){
 renderLists();
-toast('✨ List created');
+renderHistory();
+renderHome();
+}
+
+function renderHome(){
+const home=document.getElementById('homeLists');
+home.innerHTML='';
+
+lists.slice(0,1).forEach(list=>{
+home.innerHTML += `
+<div class="card list-card" onclick="openList(${list.id})">
+<div>
+<div class="list-name">${list.name}</div>
+<div class="small">${list.items.filter(i=>!i.done).length} items left</div>
+</div>
+
+<button class="icon-btn" onclick="event.stopPropagation();deleteList(${list.id})">✕</button>
+</div>
+`;
+});
 }
 
 function renderLists(){
 const container=document.getElementById('listsContainer');
 container.innerHTML='';
 
+if(!lists.length){
+container.innerHTML='<div class="card small">No active lists ✨</div>';
+return;
+}
+
 lists.forEach(list=>{
 container.innerHTML += `
 <div class="card list-card" onclick="openList(${list.id})">
 <div>
-<div class="list-title">${list.name}</div>
-<div class="muted">${list.items.filter(i=>!i.done).length} items left</div>
+<div class="list-name">${list.name}</div>
+<div class="small">${list.items.filter(i=>!i.done).length} items left</div>
 </div>
 
-<button class="delete-btn" onclick="event.stopPropagation();deleteList(${list.id})">✕</button>
+<button class="icon-btn" onclick="event.stopPropagation();deleteList(${list.id})">✕</button>
 </div>
 `;
 });
-
-renderHistory();
 }
 
 function deleteList(id){
 lists = lists.filter(l=>l.id!==id);
 save();
-renderLists();
-toast('List removed');
+render();
+showToast('List removed');
 }
 
 function openList(id){
 currentListId=id;
 
 const list=lists.find(l=>l.id===id);
-document.getElementById('currentListTitle').innerText=list.name;
+document.getElementById('currentTitle').innerText=list.name;
 
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById('listPage').classList.add('active');
-
+switchTab('listPage');
 renderItems();
 }
 
-function goHome(){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById('homePage').classList.add('active');
+function goLists(){
+switchTab('listsPage');
 }
 
 function changeQty(v){
@@ -92,18 +125,18 @@ el.classList.add('active');
 }
 
 function addItem(){
-const item=document.getElementById('itemName').value;
-if(!item.trim()) return;
+const item=document.getElementById('itemName').value.trim();
+if(!item) return;
 
-const brand=document.getElementById('brandName').value;
+const brand=document.getElementById('brandName').value.trim();
 
 const list=lists.find(l=>l.id===currentListId);
 
 list.items.push({
 id:Date.now(),
 name:item,
-brand:brand,
-qty:qty,
+brand,
+qty,
 unit:selectedUnit,
 done:false
 });
@@ -113,7 +146,7 @@ document.getElementById('brandName').value='';
 
 save();
 renderItems();
-toast('✓ Item added');
+showToast('✓ Item added');
 }
 
 function renderItems(){
@@ -132,7 +165,7 @@ ${item.brand ? `<div class="tag soft">${item.brand}</div>` : ''}
 </div>
 
 <div class="actions">
-<button onclick="copyItem('${item.brand} ${item.name}')">⧉</button>
+<button onclick="copyText('${item.brand} ${item.name}')">⧉</button>
 <button onclick="toggleItem(${item.id})">${item.done ? '↺' : '✓'}</button>
 <button onclick="removeItem(${item.id})">⌫</button>
 </div>
@@ -148,18 +181,19 @@ document.getElementById('progressText').innerText=`${completed} / ${total} compl
 document.getElementById('progressPercent').innerText=`${percent}%`;
 
 document.querySelector('.ring').style.background =
-`conic-gradient(#0f7486 ${percent*3.6}deg,#d7eef2 0deg)`;
+`conic-gradient(#0f7486 ${percent*3.6}deg,#d8eef2 0deg)`;
 }
 
-function copyItem(text){
-navigator.clipboard.writeText(text);
-toast('Copied');
+function copyText(t){
+navigator.clipboard.writeText(t);
+showToast('Copied');
 }
 
 function toggleItem(id){
 const list=lists.find(l=>l.id===currentListId);
 const item=list.items.find(i=>i.id===id);
 item.done=!item.done;
+
 save();
 renderItems();
 }
@@ -167,58 +201,86 @@ renderItems();
 function removeItem(id){
 const list=lists.find(l=>l.id===currentListId);
 list.items=list.items.filter(i=>i.id!==id);
+
 save();
 renderItems();
-toast('Item removed');
+showToast('Removed');
 }
 
 function finishShopping(){
-const index=lists.findIndex(l=>l.id===currentListId);
-if(index===-1) return;
+const idx=lists.findIndex(l=>l.id===currentListId);
 
-historyLists.unshift(lists[index]);
-lists.splice(index,1);
+history.unshift({
+...lists[idx],
+expanded:false
+});
+
+lists.splice(idx,1);
 
 save();
-renderLists();
+render();
 
-goHome();
-toast('✓ Shopping moved to history');
+switchTab('historyPage', document.querySelectorAll('.nav')[2]);
+
+showToast('✓ Shopping moved');
 }
 
 function renderHistory(){
 const container=document.getElementById('historyContainer');
 container.innerHTML='';
 
-historyLists.slice(0,2).forEach(list=>{
+if(!history.length){
+container.innerHTML='<div class="card small">No history yet ✨</div>';
+return;
+}
+
+history.slice(0,2).forEach(list=>{
 
 const purchased=list.items.filter(i=>i.done);
 const notFound=list.items.filter(i=>!i.done);
 
 container.innerHTML += `
 <div class="card history-card">
-<h3>${list.name}</h3>
 
-<div class="muted">
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<div>
+<h3>${list.name}</h3>
+<div class="summary">
 ✓ Purchased: ${purchased.length}<br>
-✕ Not Found: ${notFound.map(i=>i.name).join(', ') || 'None'}
+✕ Not Found: ${notFound.length}
 </div>
+</div>
+
+<button class="icon-btn" onclick="toggleHistory(${list.id})">⌄</button>
+</div>
+
+<div class="history-details" id="history-${list.id}">
 
 <div class="chips">
-${purchased.map(i=>`<div class="tag success">✓ ${i.name}</div>`).join('')}
-${notFound.map(i=>`<div class="tag fail">✕ ${i.name}</div>`).join('')}
+${purchased.map(i=>`<div class="tag success selectable" onclick="toggleSelect(this)">✓ ${i.name}</div>`).join('')}
+${notFound.map(i=>`<div class="tag fail selectable" onclick="toggleSelect(this)">✕ ${i.name}</div>`).join('')}
 </div>
 
-<button class="primary-btn" onclick="copyHistory(${list.id})">
-Add Selected To New List
-</button>
+<button class="primary-btn" onclick="copyHistory(${list.id})">Add Selected To New List</button>
+
+</div>
+
 </div>
 `;
 });
 }
 
+function toggleHistory(id){
+const el=document.getElementById(`history-${id}`);
+el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function toggleSelect(el){
+el.classList.toggle('selected');
+}
+
 function copyHistory(id){
-const old=historyLists.find(h=>h.id===id);
+const old=history.find(h=>h.id===id);
 
 lists.unshift({
 id:Date.now(),
@@ -227,16 +289,8 @@ items:[...old.items]
 });
 
 save();
-renderLists();
-toast('✨ Copied to new list');
+render();
+showToast('✨ Added to new list');
 }
 
-function switchTab(page,el){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(page).classList.add('active');
-
-document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
-el.classList.add('active');
-}
-
-renderLists();
+render();
