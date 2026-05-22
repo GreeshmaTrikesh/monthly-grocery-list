@@ -1,16 +1,13 @@
 let lists = JSON.parse(localStorage.getItem('familyLists')) || [];
 let currentListIndex = null;
-
-const themes = ['theme1','theme2','theme3','theme4','theme5'];
+let selectedUnit = 'kg';
 
 function saveLists(){
 localStorage.setItem('familyLists', JSON.stringify(lists));
 }
 
 function createList(){
-
 const name = document.getElementById('listName').value.trim();
-
 if(!name) return;
 
 lists.push({
@@ -24,19 +21,29 @@ saveLists();
 renderLists();
 }
 
+function deleteList(index){
+lists.splice(index,1);
+saveLists();
+renderLists();
+}
+
 function renderLists(){
 
 const container = document.getElementById('listsContainer');
-
 container.innerHTML='';
 
 lists.forEach((list,index)=>{
 
 const div = document.createElement('div');
 
-div.className = `list-card ${themes[index % themes.length]}`;
+div.className='list-card';
 
-div.innerHTML = `<div class="list-name">${list.name}</div>`;
+div.innerHTML = `
+<button class="delete-list-btn"
+onclick="event.stopPropagation(); deleteList(${index})">✕</button>
+
+<div>${list.name}</div>
+`;
 
 div.onclick = ()=>openList(index);
 
@@ -52,37 +59,50 @@ currentListIndex = index;
 document.getElementById('homePage').style.display='none';
 document.getElementById('detailsPage').style.display='block';
 
-document.getElementById('currentListName').innerText =
-lists[index].name;
+document.getElementById('currentListName').value = lists[index].name;
 
 renderItems();
 }
 
-function goBack(){
+function updateListName(){
 
+lists[currentListIndex].name =
+document.getElementById('currentListName').value;
+
+saveLists();
+renderLists();
+}
+
+function goBack(){
 document.getElementById('homePage').style.display='block';
 document.getElementById('detailsPage').style.display='none';
+}
 
+function selectUnit(el,unit){
+
+selectedUnit = unit;
+
+document.querySelectorAll('.unit-pill').forEach(btn=>{
+btn.classList.remove('active');
+});
+
+el.classList.add('active');
 }
 
 function addItem(){
 
-const itemName =
-document.getElementById('itemName').value;
-
-const qty =
-document.getElementById('qty').value;
-
-const unit =
-document.getElementById('unit').value;
-
-const brand =
-document.getElementById('brand').value;
+const itemName = document.getElementById('itemName').value;
+const qty = document.getElementById('qty').value;
+const brand = document.getElementById('brand').value;
 
 if(!itemName) return;
 
 lists[currentListIndex].items.push({
-itemName,qty,unit,brand
+itemName,
+qty,
+unit:selectedUnit,
+brand,
+completed:false
 });
 
 saveLists();
@@ -94,21 +114,65 @@ document.getElementById('brand').value='';
 renderItems();
 }
 
+function toggleComplete(index){
+
+lists[currentListIndex].items[index].completed =
+!lists[currentListIndex].items[index].completed;
+
+saveLists();
+renderItems();
+}
+
+function deleteItem(index){
+
+lists[currentListIndex].items.splice(index,1);
+
+saveLists();
+renderItems();
+}
+
+function updateProgress(){
+
+const items = lists[currentListIndex].items;
+
+const completed =
+items.filter(i=>i.completed).length;
+
+const total = items.length;
+
+const percent =
+total ? Math.round((completed/total)*100) : 0;
+
+document.getElementById('progressText').innerText =
+`${completed} / ${total} completed`;
+
+document.getElementById('progressPercent').innerText =
+`${percent}%`;
+
+document.querySelector('.progress-ring').style.background =
+`conic-gradient(#8ba8ff ${percent*3.6}deg,#edf1ff 0deg)`;
+}
+
 function renderItems(){
 
-const container =
+const activeContainer =
 document.getElementById('itemsContainer');
 
-container.innerHTML='';
+const completedContainer =
+document.getElementById('completedContainer');
 
-lists[currentListIndex].items.forEach((item)=>{
+activeContainer.innerHTML='';
+completedContainer.innerHTML='';
+
+lists[currentListIndex].items.forEach((item,index)=>{
 
 const copyValue =
 `${item.brand} ${item.itemName}`;
 
 const div = document.createElement('div');
 
-div.className='item-card';
+div.className =
+item.completed ? 'item-card completed' : 'item-card';
 
 div.innerHTML = `
 <div class="item-left">
@@ -117,15 +181,29 @@ div.innerHTML = `
 <div class="pill item-brand">${item.brand}</div>
 </div>
 
-<button class="copy-btn"
-onclick="copyItem('${copyValue}')">
-📋
-</button>
+<div class="item-actions">
+
+<button class="icon-btn"
+onclick="copyItem('${copyValue}')">⧉</button>
+
+<button class="icon-btn"
+onclick="toggleComplete(${index})">✓</button>
+
+<button class="icon-btn"
+onclick="deleteItem(${index})">🗑</button>
+
+</div>
 `;
 
-container.appendChild(div);
+if(item.completed){
+completedContainer.appendChild(div);
+}else{
+activeContainer.appendChild(div);
+}
 
 });
+
+updateProgress();
 }
 
 function copyItem(text){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Groovy Lists</title>
+<title>Grocery List</title>
 <link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,8 +18,9 @@
 
 <div class="hero-card">
 <div class="hero-content">
-<h1>Groovy Lists ✨</h1>
-<p>Your cozy family shopping companion</p>
+<div class="hero-emoji">🛒 ✨ 🥛</div>
+<h1>Grocery List</h1>
+<p>Your shopping companion</p>
 </div>
 </div>
 
@@ -36,7 +37,18 @@
 
 <div class="top-bar">
 <button class="back-btn" onclick="goBack()">←</button>
-<h2 id="currentListName"></h2>
+<input id="currentListName" class="editable-title" onchange="updateListName()">
+</div>
+
+<div class="progress-card">
+<div>
+<div class="progress-title">Shopping Progress</div>
+<div id="progressText" class="progress-subtitle">0 / 0 completed</div>
+</div>
+
+<div class="progress-ring">
+<div id="progressPercent">0%</div>
+</div>
 </div>
 
 <div class="input-card">
@@ -45,26 +57,42 @@
 <input id="itemName" placeholder="Item name">
 
 <input id="qty" type="number" placeholder="Qty">
+</div>
 
-<select id="unit">
-<option>kg</option>
-<option>g</option>
-<option>litre</option>
-<option>ml</option>
-<option>pcs</option>
-<option>packet</option>
-<option>dozen</option>
-</select>
+<div class="unit-pills">
+<button class="unit-pill active" onclick="selectUnit(this,'kg')">kg</button>
+<button class="unit-pill" onclick="selectUnit(this,'g')">g</button>
+<button class="unit-pill" onclick="selectUnit(this,'litre')">L</button>
+<button class="unit-pill" onclick="selectUnit(this,'pcs')">pcs</button>
+<button class="unit-pill" onclick="selectUnit(this,'packet')">pack</button>
 </div>
 
 <div class="row-bottom">
-<input id="brand" placeholder="Brand">
+<input id="brand" list="brands" placeholder="Brand">
+<datalist id="brands">
+<option>India Gate</option>
+<option>Aashirvaad</option>
+<option>Fortune</option>
+<option>Tata Salt</option>
+<option>Surf Excel</option>
+<option>Dove</option>
+<option>Amul</option>
+<option>DMart Premia</option>
+<option>Harpic</option>
+<option>Good Life</option>
+</datalist>
+
 <button class="add-btn" onclick="addItem()">Add</button>
 </div>
 
 </div>
 
 <div id="itemsContainer"></div>
+
+<div class="completed-section">
+<div class="completed-title">Completed Items</div>
+<div id="completedContainer"></div>
+</div>
 
 </div>
 
