@@ -1,5 +1,13 @@
-
 let lists = JSON.parse(localStorage.getItem('familyLists')) || [];
+let currentListIndex = null;
+
+const pastelClasses = [
+'pastel1',
+'pastel2',
+'pastel3',
+'pastel4',
+'pastel5'
+];
 
 function saveLists(){
 localStorage.setItem('familyLists', JSON.stringify(lists));
@@ -22,16 +30,65 @@ saveLists();
 renderLists();
 }
 
-function addItem(listIndex){
+function renderLists(){
 
-const itemName = document.getElementById(`itemName-${listIndex}`).value;
-const qty = document.getElementById(`qty-${listIndex}`).value;
-const unit = document.getElementById(`unit-${listIndex}`).value;
-const brand = document.getElementById(`brand-${listIndex}`).value;
+const container = document.getElementById('listsContainer');
+container.innerHTML='';
+
+lists.forEach((list,index)=>{
+
+const div = document.createElement('div');
+
+div.className =
+`list-card ${pastelClasses[index % pastelClasses.length]}`;
+
+div.innerHTML = list.name;
+
+div.onclick = ()=>openList(index);
+
+container.appendChild(div);
+
+});
+
+}
+
+function openList(index){
+
+currentListIndex = index;
+
+document.getElementById('homePage').style.display='none';
+document.getElementById('detailsPage').style.display='block';
+
+document.getElementById('currentListName').innerText =
+lists[index].name;
+
+renderItems();
+}
+
+function goBack(){
+
+document.getElementById('homePage').style.display='block';
+document.getElementById('detailsPage').style.display='none';
+
+}
+
+function addItem(){
+
+const itemName =
+document.getElementById('itemName').value;
+
+const qty =
+document.getElementById('qty').value;
+
+const unit =
+document.getElementById('unit').value;
+
+const brand =
+document.getElementById('brand').value;
 
 if(!itemName) return;
 
-lists[listIndex].items.push({
+lists[currentListIndex].items.push({
 itemName,
 qty,
 unit,
@@ -39,90 +96,54 @@ brand
 });
 
 saveLists();
-renderLists();
+
+document.getElementById('itemName').value='';
+document.getElementById('qty').value='';
+document.getElementById('brand').value='';
+
+renderItems();
 }
 
-function deleteItem(listIndex,itemIndex){
-lists[listIndex].items.splice(itemIndex,1);
-saveLists();
-renderLists();
-}
+function renderItems(){
 
-function searchDMart(item){
+const container =
+document.getElementById('itemsContainer');
 
-const query = `${item.brand} ${item.itemName} ${item.qty} ${item.unit}`;
-
-const url = `https://www.dmart.in/search?searchTerm=${encodeURIComponent(query)}`;
-
-window.location.href = url;
-}
-
-function renderLists(){
-
-const container = document.getElementById('listsContainer');
 container.innerHTML='';
 
-lists.forEach((list,listIndex)=>{
+lists[currentListIndex].items.forEach((item)=>{
 
-const card = document.createElement('div');
-card.className='list-card';
+const div = document.createElement('div');
 
-let itemsHtml='';
+const copyValue =
+`${item.brand} ${item.itemName}`;
 
-list.items.forEach((item,itemIndex)=>{
+div.className='item';
 
-itemsHtml += `
-<div class="item">
+div.innerHTML = `
+<div>
 <b>${item.itemName}</b><br>
 ${item.qty} ${item.unit}<br>
 ${item.brand}
-
-<div class="actions">
-<button class="small-btn"
-onclick='searchDMart(${JSON.stringify(item)})'>
-Search in DMart
-</button>
-
-<button class="small-btn"
-onclick='deleteItem(${listIndex},${itemIndex})'>
-Delete
-</button>
-</div>
-</div>
-`;
-});
-
-card.innerHTML = `
-<h2>${list.name}</h2>
-
-<input id="itemName-${listIndex}" placeholder="Item Name">
-
-<div class="inline">
-<input id="qty-${listIndex}" type="number" placeholder="Qty">
-
-<select id="unit-${listIndex}">
-<option>kg</option>
-<option>g</option>
-<option>litre</option>
-<option>ml</option>
-<option>pcs</option>
-<option>packet</option>
-<option>dozen</option>
-</select>
 </div>
 
-<input id="brand-${listIndex}" placeholder="Brand">
-
-<button onclick="addItem(${listIndex})">
-Add Item
+<button class="copy-btn"
+onclick="copyItem('${copyValue}')">
+📋
 </button>
-
-${itemsHtml}
 `;
 
-container.appendChild(card);
+container.appendChild(div);
 
 });
+
+}
+
+function copyItem(text){
+
+navigator.clipboard.writeText(text);
+
+alert('Copied: ' + text);
 
 }
 

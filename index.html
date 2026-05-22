@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,22 +11,57 @@
 
 <div class="container">
 
+<div id="homePage">
+
 <div class="header">
 <h1>🛒 Family Grocery</h1>
-<p>Reusable family shopping lists</p>
+<p>Your reusable shopping lists</p>
 </div>
 
-<div class="card">
-<h2>Create New List</h2>
-<input id="listName" placeholder="Example: Mom List">
-<button onclick="createList()">Create List</button>
+<div class="create-card">
+<input id="listName" placeholder="Create new list">
+<button onclick="createList()">Create</button>
 </div>
 
 <div id="listsContainer"></div>
 
 </div>
 
-<script src="app.js"></script>
+<div id="detailsPage" style="display:none;">
 
+<div class="top-bar">
+<button class="back-btn" onclick="goBack()">← Back</button>
+<h2 id="currentListName"></h2>
+</div>
+
+<div class="card">
+<input id="itemName" placeholder="Item Name">
+
+<div class="inline">
+<input id="qty" type="number" placeholder="Qty">
+
+<select id="unit">
+<option>kg</option>
+<option>g</option>
+<option>litre</option>
+<option>ml</option>
+<option>pcs</option>
+<option>packet</option>
+<option>dozen</option>
+</select>
+</div>
+
+<input id="brand" placeholder="Brand">
+
+<button onclick="addItem()">Add Item</button>
+</div>
+
+<div id="itemsContainer"></div>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>

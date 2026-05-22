@@ -1,9 +1,8 @@
-
 body{
-background:#f4f6f9;
-font-family:Arial,sans-serif;
 margin:0;
 padding:0;
+font-family:Arial,sans-serif;
+background:#f6f7fb;
 }
 
 .container{
@@ -17,25 +16,21 @@ text-align:center;
 margin-bottom:20px;
 }
 
-.card,.list-card{
-background:white;
-padding:20px;
-border-radius:18px;
+.create-card{
+display:flex;
+gap:10px;
 margin-bottom:20px;
-box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
 input,select{
 width:100%;
 padding:12px;
-margin-bottom:10px;
-border-radius:10px;
+border-radius:12px;
 border:1px solid #ddd;
 box-sizing:border-box;
 }
 
 button{
-width:100%;
 padding:12px;
 border:none;
 border-radius:12px;
@@ -44,25 +39,61 @@ color:white;
 cursor:pointer;
 }
 
-.inline{
-display:flex;
-gap:10px;
+.list-card{
+padding:20px;
+border-radius:18px;
+margin-bottom:15px;
+cursor:pointer;
+font-weight:bold;
+font-size:18px;
+}
+
+.pastel1{background:#ffdfe5;}
+.pastel2{background:#dff7ff;}
+.pastel3{background:#e8ffd9;}
+.pastel4{background:#fff0d9;}
+.pastel5{background:#efe3ff;}
+
+.card{
+background:white;
+padding:20px;
+border-radius:18px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+margin-bottom:20px;
 }
 
 .item{
-border:1px solid #eee;
-padding:12px;
-border-radius:12px;
-margin-top:12px;
+background:white;
+padding:15px;
+border-radius:16px;
+margin-bottom:12px;
+box-shadow:0 2px 10px rgba(0,0,0,0.06);
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
-.actions{
+.copy-btn{
+background:#f0f0f0;
+color:black;
+padding:10px 14px;
+border-radius:12px;
+}
+
+.inline{
 display:flex;
 gap:10px;
-margin-top:10px;
+margin-bottom:10px;
 }
 
-.small-btn{
+.top-bar{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:20px;
+}
+
+.back-btn{
 background:#f0f0f0;
 color:black;
 }
