@@ -266,23 +266,25 @@ margin-bottom:14px;
 }
 
 .quantity-row{
-height:58px;
+height:46px;
 background:#f4f7f8;
-border-radius:18px;
+border-radius:16px;
 display:flex;
 align-items:center;
-justify-content:center;
-gap:16px;
-margin:12px 0;
+justify-content:flex-end;
+gap:12px;
+margin:10px 0 16px;
+padding:0 14px;
 }
 
 .quantity-row button{
-width:38px;
-height:38px;
+width:32px;
+height:32px;
 border:none;
-border-radius:14px;
+border-radius:12px;
 background:white;
-font-size:20px;
+font-size:18px;
+font-weight:600;
 }
 
 .units{
@@ -307,6 +309,7 @@ color:#117b8f;
 
 .primary-btn{
 width:100%;
+margin-top:14px;
 }
 
 .item-card{
@@ -358,8 +361,8 @@ font-size:13px;
 }
 
 .finish-card{
-padding:16px;
-margin-top:12px;
+padding:20px 16px;
+margin-top:20px;
 }
 
 .finish-title{
