@@ -366,86 +366,102 @@ renderAll();
 
 let masterItems = JSON.parse(localStorage.getItem('masterItems') || '[]');
 
-function saveMasterItems(){
- localStorage.setItem('masterItems', JSON.stringify(masterItems));
+function saveMaster(){
+localStorage.setItem('masterItems', JSON.stringify(masterItems));
 }
 
-function renderMasterItems(){
- const container = document.getElementById('masterItemsContainer');
- const dropdown = document.getElementById('activeListDropdown');
+function renderMaster(){
 
- if(!container || !dropdown) return;
+const wrap = document.getElementById('masterItems');
+const dropdown = document.getElementById('masterTargetList');
 
- container.innerHTML = masterItems.map((item,index)=>`
-   <div class="master-item">
-      <input type="checkbox" class="master-check" value="${item.name}">
-      <span>${item.name}</span>
-   </div>
- `).join('');
+if(!wrap || !dropdown) return;
 
- dropdown.innerHTML = activeLists.map((list,index)=>`
-   <option value="${index}">${list.name}</option>
- `).join('');
+wrap.innerHTML = masterItems.map((item,index)=>`
+<div class="master-item">
+<input type="checkbox" class="masterCheck" value="${item}">
+<div>${item}</div>
+</div>
+`).join('');
+
+dropdown.innerHTML = lists.map(list=>`
+<option value="${list.id}">${list.name}</option>
+`).join('');
+
 }
 
 function addMasterItem(){
- const input = document.getElementById('masterItemInput');
- if(!input || !input.value.trim()) return;
 
- const exists = masterItems.some(
-   i => i.name.toLowerCase() === input.value.trim().toLowerCase()
- );
+const input = document.getElementById('masterInput');
 
- if(exists){
-   alert('Item already exists');
-   return;
- }
+if(!input.value.trim()) return;
 
- masterItems.push({
-   name: input.value.trim()
- });
+const exists = masterItems.some(
+x => x.toLowerCase() === input.value.trim().toLowerCase()
+);
 
- input.value = '';
- saveMasterItems();
- renderMasterItems();
+if(exists){
+toast('Already exists');
+return;
 }
 
-function addSelectedToList(){
- const dropdown = document.getElementById('activeListDropdown');
- if(!dropdown) return;
+masterItems.unshift(input.value.trim());
 
- const listIndex = dropdown.value;
- const selected = [...document.querySelectorAll('.master-check:checked')]
-   .map(x => x.value);
+input.value='';
 
- if(selected.length === 0) return;
+saveMaster();
+renderMaster();
 
- selected.forEach(itemName => {
-
-   const exists = activeLists[listIndex].items.some(
-      i => i.name.toLowerCase() === itemName.toLowerCase()
-   );
-
-   if(!exists){
-      activeLists[listIndex].items.push({
-         name:itemName,
-         quantity:1,
-         unit:'pcs',
-         completed:false
-      });
-   }
- });
-
- localStorage.setItem('activeLists', JSON.stringify(activeLists));
-
- if(typeof renderLists === 'function'){
-    renderLists();
- }
-
- alert('Items added successfully');
+toast('✨ Added to master');
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
- setTimeout(renderMasterItems, 500);
+function addSelectedMasterItems(){
+
+const targetId = Number(document.getElementById('masterTargetList').value);
+
+const targetList = lists.find(x=>x.id===targetId);
+
+if(!targetList) return;
+
+const selected = [...document.querySelectorAll('.masterCheck:checked')]
+.map(x=>x.value);
+
+let added = 0;
+
+selected.forEach(item=>{
+
+const exists = targetList.items.some(
+i => i.name.toLowerCase() === item.toLowerCase()
+);
+
+if(!exists){
+
+targetList.items.push({
+name:item,
+qty:1,
+unit:'pcs',
+brand:'',
+done:false
 });
+
+added++;
+}
+
+});
+
+save();
+renderAll();
+
+toast(`✨ ${added} items added`);
+}
+
+const oldRenderAll = renderAll;
+
+renderAll = function(){
+
+oldRenderAll();
+
+renderMaster();
+
+}
 

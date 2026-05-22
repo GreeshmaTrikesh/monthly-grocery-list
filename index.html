@@ -61,6 +61,31 @@
 <div id="historyContainer"></div>
 </section>
 
+
+<section id="masterPage" class="page">
+
+<div class="page-title">Master List</div>
+
+<div class="add-card">
+
+<div class="item-qty-row">
+<input id="masterInput" placeholder="Add master item">
+
+<button class="small-add-btn" onclick="addMasterItem()">+</button>
+</div>
+
+<div id="masterItems"></div>
+
+<select id="masterTargetList" class="master-select"></select>
+
+<button class="primary-btn" onclick="addSelectedMasterItems()">
+Add Selected To List
+</button>
+
+</div>
+
+</section>
+
 <section id="detailPage" class="page">
 
 <div class="detail-topbar">
@@ -80,12 +105,15 @@
 </div>
 
 <div class="add-card">
+
+<div class="item-qty-row">
 <input id="itemInput" placeholder="Item">
 
-<div class="quantity-row">
+<div class="quantity-row compact">
 <button onclick="changeQty(-1)">−</button>
 <div id="qtyValue">1</div>
 <button onclick="changeQty(1)">+</button>
+</div>
 </div>
 
 <div class="units">
@@ -117,24 +145,9 @@
 <button class="nav active" onclick="switchTab('homePage',this)">⌂</button>
 <button class="nav" onclick="switchTab('listsPage',this)">☰</button>
 <button class="nav" onclick="switchTab('historyPage',this)">◷</button>
+<button class="nav" onclick="switchTab('masterPage',this)">★</button>
 </div>
 
 <script src="app.js"></script>
-
-<div id="master-page" style="display:none;padding:24px;">
-  <h2 style="margin-bottom:16px;">Master List</h2>
-
-  <div class="master-panel">
-    <input id="masterItemInput" placeholder="Add master item" class="text-input"/>
-    <button class="primary-btn" onclick="addMasterItem()">Add Master Item</button>
-
-    <div id="masterItemsContainer"></div>
-
-    <div class="master-actions">
-      <select id="activeListDropdown"></select>
-      <button class="primary-btn" onclick="addSelectedToList()">Add Selected Items</button>
-    </div>
-  </div>
 </body>
-
 </html>
