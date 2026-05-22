@@ -1,2 +1,104 @@
+body{
+background:#edf5f6;
+font-family:Arial,sans-serif;
+padding:20px;
+margin:0;
+color:#0b2230;
+}
 
-/* v21 Premium UI refinements */
+.hero{
+background:linear-gradient(135deg,#0e879d,#6ec6d9);
+padding:28px;
+border-radius:36px;
+color:white;
+margin-bottom:24px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.hero h1{
+font-size:54px;
+margin:10px 0;
+}
+
+.hero p{
+font-size:18px;
+opacity:0.95;
+}
+
+.small{
+font-size:16px;
+opacity:0.9;
+}
+
+.card{
+background:white;
+padding:18px;
+border-radius:30px;
+margin-bottom:20px;
+box-shadow:0 10px 20px rgba(0,0,0,0.04);
+}
+
+input{
+width:100%;
+padding:18px;
+border:none;
+border-radius:18px;
+background:#f3f5f7;
+font-size:18px;
+margin-bottom:16px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:18px;
+border:none;
+border-radius:20px;
+background:#0f8399;
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.list-card{
+background:white;
+padding:20px;
+border-radius:28px;
+margin-bottom:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.title{
+font-size:28px;
+font-weight:bold;
+}
+
+.subtitle{
+color:#6c7780;
+margin-top:8px;
+}
+
+.delete{
+background:#f3f5f7;
+color:#1a7fc8;
+border-radius:18px;
+padding:12px 16px;
+cursor:pointer;
+}
+
+.bottom-nav{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:white;
+padding:18px 28px;
+border-radius:36px;
+display:flex;
+gap:28px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+font-size:28px;
+}
