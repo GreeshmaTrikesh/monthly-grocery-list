@@ -61,6 +61,44 @@
 <div id="historyContainer"></div>
 </section>
 
+
+<section id="masterPage" class="page">
+<div class="page-title">Master List</div>
+
+<div class="add-card">
+
+<div class="master-row">
+<input id="masterItemInput" placeholder="Item">
+
+<div class="master-qty-box">
+<button onclick="changeMasterQty(-1)">−</button>
+<div id="masterQtyValue">1</div>
+<button onclick="changeMasterQty(1)">+</button>
+</div>
+</div>
+
+<div class="units">
+<div class="master-unit active" onclick="selectMasterUnit(this,'kg')">kg</div>
+<div class="master-unit" onclick="selectMasterUnit(this,'g')">g</div>
+<div class="master-unit" onclick="selectMasterUnit(this,'L')">L</div>
+<div class="master-unit" onclick="selectMasterUnit(this,'pcs')">pcs</div>
+</div>
+
+<input id="masterBrandInput" placeholder="Brand (optional)">
+
+<button class="primary-btn" onclick="addMasterItem()">Add Item</button>
+
+<div id="masterItemsContainer"></div>
+
+<select id="masterListSelect" class="master-select"></select>
+
+<button class="primary-btn" onclick="addSelectedMasterItems()">
+Add Selected To Existing List
+</button>
+
+</div>
+</section>
+
 <section id="detailPage" class="page">
 
 <div class="detail-topbar">
@@ -117,6 +155,7 @@
 <button class="nav active" onclick="switchTab('homePage',this)">⌂</button>
 <button class="nav" onclick="switchTab('listsPage',this)">☰</button>
 <button class="nav" onclick="switchTab('historyPage',this)">◷</button>
+<button class="nav" onclick="switchTab('masterPage',this)">★</button>
 </div>
 
 <script src="app.js"></script>
